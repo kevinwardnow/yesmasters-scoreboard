@@ -9,6 +9,7 @@ interface AgentRow {
   id: string
   full_name: string
   email: string
+  role: string
   scoreboardId: string | null
   entries: WeeklyEntry[]
 }
@@ -21,8 +22,7 @@ export default function CoachPage() {
     async function load() {
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, full_name, email, scoreboards(id)')
-        .eq('role', 'agent')
+        .select('id, full_name, email, role, scoreboards(id)')
         .order('full_name')
 
       if (!profiles) { setLoading(false); return }
@@ -36,7 +36,7 @@ export default function CoachPage() {
           const { data } = await supabase.from('weekly_entries').select('*').eq('scoreboard_id', sbId)
           entries = data || []
         }
-        rows.push({ id: p.id, full_name: p.full_name, email: p.email, scoreboardId: sbId, entries })
+        rows.push({ id: p.id, full_name: p.full_name, email: p.email, role: p.role, scoreboardId: sbId, entries })
       }
       setAgents(rows)
       setLoading(false)
@@ -53,7 +53,7 @@ export default function CoachPage() {
           <Users className="text-blue-400" size={24} />
           <div>
             <h1 className="text-2xl font-bold text-white">Team Dashboard</h1>
-            <p className="text-slate-400 text-sm">{agents.length} agents</p>
+            <p className="text-slate-400 text-sm">{agents.length} members</p>
           </div>
         </div>
         <Link to="/coach/add-agent" className="btn-primary flex items-center gap-2">

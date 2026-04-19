@@ -162,13 +162,18 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!scoreboardId) return
     async function loadGoals() {
-      const { data } = await supabase.from('goals').select('*').eq('scoreboard_id', scoreboardId).single()
-      if (data) {
-        const g: GoalMap = {}
-        Object.keys(DEFAULT_GOALS).forEach(k => { g[k] = Number(data[k]) || DEFAULT_GOALS[k] })
-        setGoals(g)
+      try {
+        const { data } = await supabase.from('goals').select('*').eq('scoreboard_id', scoreboardId).maybeSingle()
+        if (data) {
+          const g: GoalMap = {}
+          Object.keys(DEFAULT_GOALS).forEach(k => { g[k] = Number(data[k]) || DEFAULT_GOALS[k] })
+          setGoals(g)
+        }
+      } catch (_) {
+        // use defaults
+      } finally {
+        setGoalsLoading(false)
       }
-      setGoalsLoading(false)
     }
     loadGoals()
   }, [scoreboardId])
