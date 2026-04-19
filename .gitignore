@@ -1,0 +1,25 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Local env files
+.env.local
+.env.*.local
+
+# Editor directories
+.DS_Store
+.vscode
+.idea
